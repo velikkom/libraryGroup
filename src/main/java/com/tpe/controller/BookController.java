@@ -1,11 +1,14 @@
 package com.tpe.controller;
 
+import com.tpe.entity.concretes.business.Book;
+import com.tpe.payload.messages.SuccessMessages;
 import com.tpe.payload.request.BookRequest;
 import com.tpe.payload.response.BookResponse;
 import com.tpe.payload.response.ResponseMessage;
 import com.tpe.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +31,7 @@ public class BookController {
 
     //1.ENDPOINT GET
     @GetMapping("/books")  //http://localhost/8080/books?q=sefiller&cat=4&author=34&publisher=42&page=1&size=10&sort=name&type=asc
-
+    @PreAuthorize("hasAnyAuthority( 'ADMIN','STAFF','MEMBER')")
     public Page<BookResponse> getAllBookByPage(
 
             @RequestParam(required = false) String q,
@@ -43,27 +48,18 @@ public class BookController {
     }
 
 
-
-
-
-
-
-
     //2. ENDPOINT GET
-    @GetMapping("/{bookId}") //http://localhost/8080/books
-    @PreAuthorize("hasAnyAuthority( 'ADMIN')")
-    public List<BookResponse> getAll() {
-        return bookService.getAll();
+    @GetMapping("/{bookId}") //http://localhost/8080/books/5
+    @PreAuthorize("hasAnyAuthority( 'ADMIN','STAFF','MEMBER')")
+    public ResponseEntity<BookResponse> getAll(@PathVariable Long bookId) {
+       BookResponse book = bookService.findById( bookId);
+       if (book !=null){
+           return ResponseEntity.ok(book);
+       }else return ResponseEntity.notFound().build();
     }
 
 
-
-
-
-
-
-
-    //3: ENDPOINT POST
+    //http://localhost/8080/books
     @PostMapping ("/books")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<BookResponse> createBook(@RequestBody @Valid BookRequest bookRequest){
@@ -72,24 +68,17 @@ public class BookController {
 
     }
 
-
-
-
-
-
-
-    //4.ENDPOINT PUT
+    //http://localhost/8080/books/5 +UPTADE+JSON
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PutMapping("/books/{id}") //http://localhost:8080//books/5
-    public ResponseEntity<BookResponse> updateBookById(@PathVariable Long id,
+    public ResponseEntity<ResponseMessage<BookResponse>> updateBookById(@PathVariable Long id,
                                                        @RequestBody BookRequest bookRequest){
-        return ResponseEntity.ok(bookService.updateBookById(id, bookRequest));
+        ResponseMessage<BookResponse> response = bookService.updateBook(id, bookRequest);
+        return ResponseEntity.ok(response);
+
     }
-
-
-
-
+    //todo delete will continue
 
     //5.ENDPOINT DELETE
 

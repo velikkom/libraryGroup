@@ -34,8 +34,15 @@ public class MethodHelper {
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
     }
+    //validateISBN
+    private static boolean validateISBN(String isbn) {
+        return isbn != null && isbn.matches("\\d{3}-\\d{2}-\\d{5}-\\d{2}-\\d");
+    }
 
-
+    //validate shelf code
+    private static boolean validateShelfCode(String shelfCode) {
+        return shelfCode != null && shelfCode.matches("[A-Z]{2}-\\d{3}");
+    }
 
 
 
