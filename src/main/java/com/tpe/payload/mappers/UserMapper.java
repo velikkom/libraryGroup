@@ -5,6 +5,9 @@ import com.tpe.payload.request.UserRequest;
 import com.tpe.payload.response.UserResponse;
 import lombok.Data;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+
 @Data
 @Component
 public class UserMapper {
@@ -17,8 +20,9 @@ public class UserMapper {
                 .birthDate(userRequest.getBirthDate())
                 .password(userRequest.getPassword())
                 .phone(userRequest.getPhone())
+                .createDate(userRequest.getCreateDate() != null ? userRequest.getCreateDate() : LocalDateTime.now())
+                .score(userRequest.getScore())
                 .build();
-
     }
 
     public UserResponse mapUserToUserResponse(User user) {
@@ -32,7 +36,6 @@ public class UserMapper {
                 .password(user.getPassword())
                 .phone(user.getPhone())
                 .build();
-
     }
 
     public User mapUserRequestToUpdatedUser(UserRequest userRequest, Long userId){
@@ -45,11 +48,8 @@ public class UserMapper {
                 .birthDate(userRequest.getBirthDate())
                 .password(userRequest.getPassword())
                 .phone(userRequest.getPhone())
+                .createDate(userRequest.getCreateDate() != null ? userRequest.getCreateDate() : LocalDateTime.now())
+                .score(userRequest.getScore())
                 .build();
     }
-
-
-
-
-
 }

@@ -1,9 +1,12 @@
 package com.tpe.entity.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum RoleType {
 
     ADMIN("Admin"),
-    MEMBER("Member"),
+    STAFF("Staff"),
     EMPLOYEE("Employee");
 
 
@@ -13,7 +16,4 @@ public enum RoleType {
         this.name = name;
     }
 
-    public String getName(){
-        return name;
-    }
 }

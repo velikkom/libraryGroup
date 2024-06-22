@@ -54,7 +54,7 @@ public class UserService {
 
 
         // Set the default role to MEMBER
-        user.setRole(roleService.getRole(RoleType.MEMBER));
+        user.setRole(roleService.getRole(RoleType.STAFF));
 
         // Encode and set the password
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
@@ -112,7 +112,7 @@ public class UserService {
 
         // Yetki kontrolü
         if (creatorRole == RoleType.ADMIN ||
-                (creatorRole == RoleType.EMPLOYEE && userRequest.getRoleType() == RoleType.MEMBER)) {
+                (creatorRole == RoleType.EMPLOYEE && userRequest.getRoleType() == RoleType.STAFF)) {
 
             // Yeni kullanıcı nesnesi oluştur
             UserRequest newUser = new UserRequest();
@@ -193,7 +193,7 @@ public class UserService {
         } else if (userRole.equalsIgnoreCase("Employee")) {
             user.setRole(roleService.getRole(RoleType.EMPLOYEE));
         } else if (userRole.equalsIgnoreCase("Member")) {
-            user.setRole(roleService.getRole(RoleType.MEMBER));
+            user.setRole(roleService.getRole(RoleType.STAFF));
         }
         // !!! password encode ediliyor
         user.setPassword(passwordEncoder.encode(user.getPassword()));

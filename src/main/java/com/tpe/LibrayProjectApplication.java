@@ -10,11 +10,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @SpringBootApplication
-public class LibrayProjectApplication  {
+public class LibrayProjectApplication implements CommandLineRunner {
 
 	private final RoleService roleService;
 	private final RoleRepository roleRepository;
@@ -31,42 +34,49 @@ public class LibrayProjectApplication  {
 	}
 
 
-//	@Override
-//	public void run(String... args) throws Exception {
-//
-//		// Role tablomu dolduracagim ama once bos mu diye kontrol edecegim
-//		if(roleService.getAllUserRole().isEmpty()){
-//
-//			Role admin = new Role();
-//			admin.setRoleType(RoleType.ADMIN);
-//			admin.setName("Admin");
-//			roleRepository.save(admin);
-//
-//			Role employee = new Role();
-//			employee.setRoleType(RoleType.EMPLOYEE);
-//			employee.setName("Employee");
-//			roleRepository.save(employee);
-//
-//			Role member = new Role();
-//			member.setRoleType(RoleType.MEMBER);
-//			member.setName("Member");
-//			roleRepository.save(member);
-//
-//		}
-//
-//		// Built_in Admin olusturuluyor eger sistemde Admin yoksa
-//		if(userService.countAllAdmins()==0){
-//
-//			UserRequest adminRequest = new UserRequest();
-//			adminRequest.setEmail("admin@admin.com");
-//			adminRequest.setPassword("123456");
-//			adminRequest.setFirstName("Admin");
-//			adminRequest.setLastName("Admin");
-//			adminRequest.setAddress("Bektas, Istanbul");
-//			adminRequest.setPhone("111-111-1111");
-//			adminRequest.setBirthDate(LocalDate.of(1990,01,01));
-//			userService.saveUser(adminRequest,"Admin");
-//		}
-//
-//	}
+	@Override
+	@Transactional
+	public void run(String... args) throws Exception {
+
+		// Role tablomu dolduracagim ama once bos mu diye kontrol edecegim
+		if(roleService.getAllUserRole().isEmpty()){
+
+			Role admin = new Role();
+			admin.setRoleType(RoleType.ADMIN);
+			admin.setName("Admin");
+			roleRepository.save(admin);
+
+			Role employee = new Role();
+			employee.setRoleType(RoleType.EMPLOYEE);
+			employee.setName("Employee");
+			roleRepository.save(employee);
+
+			Role member = new Role();
+			member.setRoleType(RoleType.STAFF);
+			member.setName("Staff");
+			roleRepository.save(member);
+
+		}
+
+		// Built_in Admin olusturuluyor eger sistemde Admin yoksa
+		if(userService.countAllAdmins()==0){
+
+			UserRequest adminRequest = new UserRequest();
+			adminRequest.setEmail("admin@admin.com");
+			adminRequest.setPassword("123456");
+			adminRequest.setFirstName("Admin");
+			adminRequest.setLastName("Admin");
+			adminRequest.setAddress("Bektas, Istanbul");
+			adminRequest.setPhone("123 456 7890");  // Telefon numarasını doğru formata getirme
+			adminRequest.setBirthDate(LocalDate.of(1990, 1, 1));
+			adminRequest.setScore(0);  // Score değeri setleniyor
+			adminRequest.setBuiltIn(Boolean.TRUE);
+			adminRequest.setCreateDate(LocalDateTime.now());  // CreateDate'i şu anki zaman olarak setleme
+
+// UserService üzerinden kullanıcıyı kaydetme
+			userService.saveUser(adminRequest, "Admin");
+
+		}
+
+	}
 }

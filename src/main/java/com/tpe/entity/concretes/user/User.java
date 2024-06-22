@@ -1,4 +1,4 @@
-package com.tpe.entity.concretes.user; // checked
+package com.tpe.entity.concretes.user;
 
 import com.tpe.entity.concretes.business.Loan;
 import com.tpe.entity.concretes.business.Role;
@@ -9,11 +9,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -28,9 +28,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @Column(name = "username", nullable = false, unique = true, length = 50)
-//    private String username;
 
     @NotNull
     @Size(min = 2, max = 30)
@@ -53,7 +50,7 @@ public class User {
     @Pattern(regexp = "\\d{3} \\d{3} \\d{4}")
     private String phone;
 
-    @DateTimeFormat(pattern = "yyyy MM dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
     @NotNull
@@ -62,12 +59,12 @@ public class User {
     private String email;
 
     @NotNull
-    private String password; // Bu alan şifrelenmiş (hashed) olmalıdır
+    private String password;
 
     @NotNull
     private LocalDateTime createDate;
 
-    private String resetPasswordCode; // Bu alan hashlenmiş olmalıdır
+    private String resetPasswordCode;
 
     @NotNull
     private Boolean builtIn = false;
@@ -81,5 +78,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
+
+
 
 }

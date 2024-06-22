@@ -8,11 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,9 +34,11 @@ public class UserRequest {
     @Pattern(regexp = "\\d{3} \\d{3} \\d{4}")
     private String phone;
 
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy MM dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
+
+    @NotNull
+    private LocalDateTime createDate = LocalDateTime.now();  // Default olarak şu anki zaman atanıyor
 
     @NotNull
     @Email
@@ -45,11 +46,18 @@ public class UserRequest {
     private String email;
 
     @NotNull
+    private Boolean builtIn = false;
+
+    @NotNull
     private String password;
 
     @NotNull(message = "Role is mandatory")
     private RoleType roleType;
 
+    @NotNull
+    @Min(value = -2)
+    @Max(value = 2)
+    private Integer score = 0;
 
     private Role role;
 

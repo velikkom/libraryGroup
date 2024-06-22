@@ -30,36 +30,35 @@ public class AuthenticationService {
 
     // Not: Signin() *************************************************
     public ResponseEntity<AuthResponse> authenticateUser(SigninRequest signinRequest) {
-        //!!! Gelen requestin icinden kullanici adi ve parola bilgisi aliniyor
+        //! Username and password information is extracted from the incoming request
         String email = signinRequest.getEmail();
         String password = signinRequest.getPassword();
-        // !!! authenticationManager uzerinden kullaniciyi valide ediyoruz
+        // validating the user through the authenticationManager
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        // !!! valide edilen kullanici Context e atiliyor
+        //  Validated user is thrown into Context
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        // !!! JWT token olusturuluyor
+        // JWT token created
         String token = "Bearer " + jwtUtils.generateJwtToken(authentication);
-        // !!! signin islemini gerceklestirilen kullaniciya ulasiliyor
+        // sign in user
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        // !!!  Response olarak sign in islemini yapan kullaniciyi donecegiz gerekli fieldlar setleniyor
-        // !!! GrantedAuthority turundeki role yapisini String turune ceviriliyor
+// !!! We will return the user who made the sign in transaction as a response, the necessary fields are set
+// !!! The GrantedAuthority type role structure is converted to String type
         Set<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
-        //!!! bir kullanicinin birden fazla rolu olmayacagi icin ilk indexli elemani aliyoruz
+
         Optional<String> role = roles.stream().findFirst();
-        // burada sign in islemini gerceklestiren kullanici bilgilerini response olarak
-        // gonderecegimiz icin, gerekli bilgiler setleniyor.
+        // Here, since we are sending the user information that performed the sign in process as a response, the necessary information is setting.
         AuthResponse.AuthResponseBuilder authResponse = AuthResponse.builder();
         authResponse.email(userDetails.getEmail());
         authResponse.token(token.substring(7));
 
-        // !!! role bilgisi varsa response nesnesindeki degisken setleniyor
+        // !!!If there is role information, the variable in the response object is setting.
         role.ifPresent(authResponse::role);
 
-        // !!! AuthResponse nesnesi ResponseEntity ile donduruyoruz
+        // !!! AuthResponse obj retuning ResponseEntity obj
         return ResponseEntity.ok(authResponse.build());
     }
 
