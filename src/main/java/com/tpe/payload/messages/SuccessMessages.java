@@ -51,6 +51,8 @@ public class SuccessMessages {
     public static final String USER_UPDATE_MESSAGE = "";
     public static final String USER_DELETE = "";
     public static final String LOAN_FOUND =  "Lesson is saved Successfully";
+    public static final String LOAN_SAVED =  "Lesson is saved Successfully";
+    public static final String LOAN_WIEVED_SUCCESSFULLY =  "Borrowed books viewed successfully";
     public static final String PUBLISHER_CREATED = "";
     public static final String BOOK_DELETE = "Book deleted successfully";
 
