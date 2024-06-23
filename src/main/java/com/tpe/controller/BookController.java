@@ -7,6 +7,7 @@ import com.tpe.payload.response.BookResponse;
 import com.tpe.payload.response.ResponseMessage;
 import com.tpe.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.bridge.Message;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,14 +79,16 @@ public class BookController {
         return ResponseEntity.ok(response);
 
     }
-    //todo delete will continue
 
-    //5.ENDPOINT DELETE
+
+    //5.ENDPOINT DELETE // http://localhost:8080/books/5 +DELETE MAPPING + JSON
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @DeleteMapping("/books/{id}") // http://localhost:8080/meet/2
-    public ResponseMessage deleteBook(@PathVariable Long id, HttpServletRequest httpServletRequest){
-        return bookService.deleteBook(id, httpServletRequest);
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<?> deleteBook(@PathVariable Long id, HttpServletRequest httpServletRequest){
+      bookService.deleteBook(id, httpServletRequest);
+        return ResponseEntity.ok(HttpStatus.OK);
+
     }
 
 

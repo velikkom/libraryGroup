@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.metamodel.SingularAttribute;
@@ -150,16 +151,7 @@ public class BookService {
 
 
     //DELETE
-    public ResponseMessage deleteBook(Long id, HttpServletRequest httpServletRequest) {
 
-        isBookExistById(id);
-        bookRepository.deleteById(id);   //??? repository bak?
-        return ResponseMessage.builder()
-                .message(SuccessMessages.BOOK_DELETE)
-                .httpStatus(HttpStatus.OK)
-                .build();
-
-    }
 
     public BookResponse findById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.BOOK_NOT_FOUND_MESSAGE));
@@ -208,6 +200,13 @@ public class BookService {
                 .createDate(book.getCreateDate())
                 .loanable(book.isLoanable())
                 .build();
+    }
+
+
+    public void deleteBook(Long id, HttpServletRequest httpServletRequest)
+    {
+       Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorMessages.BOOK_NOT_FOUND_MESSAGE));
+       bookRepository.delete(book);
     }
 }
 
