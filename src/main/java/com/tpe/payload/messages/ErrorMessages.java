@@ -59,7 +59,7 @@ public class ErrorMessages {
     public static final String NOT_FOUND_USER_MESSAGE = "User is not found by email" ;
     public static final String NOT_PERMITTED_METHOD_MESSAGE = "";
     public static final String NOT_FOUND_LOAN = "Loan  by Id %s Not found" ;
-    public static final String PUBLISHER_EXISTS_MESSAGE = "";
+    public static final String PUBLISHER_NOT_FOUND_MESSAGE = "Publisher by Id %s Not found";
     public static final String USER_CAN_NOT_BORROW_BOOK = "User cannot borrow more books due to overdue or limit reached";
 
 
