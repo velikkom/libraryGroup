@@ -1,4 +1,4 @@
-package com.tpe.controller;
+package com.tpe.controller.User;
 
 import com.tpe.entity.concretes.business.Role;
 import com.tpe.entity.concretes.user.User;

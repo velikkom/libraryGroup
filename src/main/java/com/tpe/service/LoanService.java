@@ -18,7 +18,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.net.FileNameMap;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -29,7 +34,8 @@ public class LoanService {
     private final LoanMapper loanMapper;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
-    private final MethodHelper methodHelper;
+   // private final MethodHelper methodHelper;
+    private final EntityManager entityManager;
 
 
     public Page<LoanResponse> findAllLoans(Pageable pageable) {
@@ -80,13 +86,13 @@ public class LoanService {
 
         // Check user's current loan count and overdue status
 
-        if (methodHelper.userHasOverdueBooks(user.getId()) || !methodHelper.userHasOverdueBooks(user.getId()))
+        if (userHasOverdueBooks(user.getId()) || !userHasOverdueBooks(user.getId()))
         {
             throw new RuntimeException(ErrorMessages.USER_CAN_NOT_BORROW_BOOK);
         }
         //create loan
         LocalDateTime loanDate = LocalDateTime.now();
-        LocalDateTime expireDate = loanDate.plusDays(methodHelper.calculateLoanDuration(user.getScore()));
+        LocalDateTime expireDate = loanDate.plusDays(calculateLoanDuration(user.getScore()));
 
         Loan loan = new Loan();
         loan.setUser(user);
@@ -101,6 +107,11 @@ public class LoanService {
         return loanMapper.convertToLoanResponseCreate(loan);
 
     }
+    public boolean userHasOverdueBooks(Long userId) {
+        return loanRepository.findOverdueLoansByUserId(userId).stream()
+                .anyMatch(loan -> loan.getReturnDate().isBefore(LocalDate.now().atStartOfDay()));
+    }
+
 
     public LoanResponse updateLoan(Long loanId, LoanRequest request)
     {
@@ -113,11 +124,69 @@ public class LoanService {
             Book book = loan.getBook();
             book.setLoanable(true);
             bookRepository.save(book);
-            methodHelper.updateUserScore(loan.getUser(), loan.getReturnDate().isBefore(loan.getExpireDate()));
+            updateUserScore(loan.getUser(), loan.getReturnDate().isBefore(loan.getExpireDate()));
         }
         loanRepository.save(loan);
         return loanMapper.convertToLoanResponseUpdate(loan);
 
 
     }
+
+    public boolean canUserBorrowMoreBooks(User user) {
+        int currentLoanCount = countByUserId(user.getId());
+        int maxBooksAllowed = calculateMaxBooks(user.getScore());
+        return currentLoanCount < maxBooksAllowed;
+    }
+
+    public int countByUserId(Long userId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        //
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<Loan> loan = query.from(Loan.class);
+        query.select(cb.count(loan));
+        query.where(cb.and(
+                cb.equal(loan.get("user").get("id"), userId),
+                cb.isNull(loan.get("returnDate"))
+        ));
+
+        return entityManager.createQuery(query).getSingleResult().intValue();
+    }
+
+    public int calculateMaxBooks(int score) {
+        if (score >= 2) return 5;
+        if (score == 1) return 4;
+        if (score == 0) return 3;
+        if (score == -1) return 2;
+        return 1; // Default to 1 for score -2 and below
+    }
+
+    public long calculateLoanDuration(int score) {
+        if (score >= 2) return 20;
+        if (score == 1) return 15;
+        if (score == 0) return 10;
+        if (score == -1) return 6;
+        return 3; // Default to 3 days for score -2 and below
+    }
+
+
+    public void updateUserScore(User user, boolean isOnTime) {
+        int currentScore = user.getScore();
+        user.setScore(isOnTime ? currentScore + 1 : currentScore - 1);
+        userRepository.save(user);
+    }
+
+
+   /* public int countByUserId(Long userId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        //
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<Loan> loan = query.from(Loan.class);
+        query.select(cb.count(loan));
+        query.where(cb.and(
+                cb.equal(loan.get("user").get("id"), userId),
+                cb.isNull(loan.get("returnDate"))
+        ));
+
+        return entityManager.createQuery(query).getSingleResult().intValue();
+    }*/
 }

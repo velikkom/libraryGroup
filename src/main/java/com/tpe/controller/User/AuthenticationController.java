@@ -1,4 +1,4 @@
-package com.tpe.controller;
+package com.tpe.controller.User;
 
 import com.tpe.payload.request.SigninRequest;
 import com.tpe.payload.response.AuthResponse;

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -25,9 +26,23 @@ public interface LoanRepository extends JpaRepository<Loan,Long> {
     @EntityGraph(attributePaths = {"user", "book"})
     Optional<Loan> findById(Long loanId);
 
-    @Query("SELECT COUNT(l) FROM Loan l WHERE l.userId = :userId AND l.returnDate IS NULL")
-    int countByUserId(Long id);
+  /*  @Query("SELECT COUNT(l) FROM Loan l WHERE l.userId = :userId AND l.returnDate IS NULL")
+    int countByUserId(Long id);*/
 
-    @Query("SELECT l FROM Loan l WHERE l.userId = :userId AND l.returnDate < CURRENT_DATE")
-    List<Loan> findOverdueLoansByUserId(Long userId);
+//    @Query("SELECT COUNT(l) FROM Loan l WHERE l.user.id = :userId AND l.returnDate IS NULL")
+//    int countByUserId(@Param("userId") Long userId);
+
+    /*@Query(value = "SELECT COUNT(*) FROM loans WHERE user_id = :userId AND return_date IS NULL", nativeQuery = true)
+    int countByUserId(@Param("userId") Long userId);*/
+
+
+
+
+
+//    @Query("SELECT l FROM Loan l WHERE l.userId = :userId AND l.returnDate < CURRENT_DATE")
+//    List<Loan> findOverdueLoansByUserId(Long userId);
+
+    @Query("SELECT l FROM Loan l JOIN FETCH l.user u WHERE u.id = :userId AND l.returnDate < CURRENT_DATE")
+    List<Loan> findOverdueLoansByUserId(@Param("userId") Long userId);
+
 }

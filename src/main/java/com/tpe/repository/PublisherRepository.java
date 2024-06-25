@@ -11,5 +11,7 @@ public interface PublisherRepository extends JpaRepository<Publisher ,Long>
 
     PublisherResponse findPublisherById(Long id);
 
-    boolean existsPublisherName(String publisherName);
+    //boolean existsPublisherName(String publisherName);
+
+    boolean existsPublisherByNameEqualsIgnoreCase(String publisherName);
 }

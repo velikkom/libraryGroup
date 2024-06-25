@@ -17,7 +17,10 @@ import com.tpe.repository.UserRepository;
 import com.tpe.service.helper.MethodHelper;
 import com.tpe.service.helper.PageableHelper;
 import com.tpe.service.helper.UniquePropertyValidator;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,13 +36,16 @@ import java.util.Objects;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UniquePropertyValidator uniquePropertyValidator;
+    @Autowired
+    private  UniquePropertyValidator uniquePropertyValidator;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final PageableHelper pageableHelper;
-    private final MethodHelper methodHelper;
+
+    @Autowired
+    private  MethodHelper methodHelper;
     private final RoleService roleService ;
-    private final LoanRepository loanRepository;
+    //private final LoanRepository loanRepository;
 
     public User registerUser(UserRequest userRequest) {
         // Check for duplicate email and phone

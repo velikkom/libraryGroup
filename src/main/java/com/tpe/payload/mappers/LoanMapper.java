@@ -11,8 +11,8 @@ public class LoanMapper {
     public LoanResponse convertToLoanResponse(Loan loan) {
         LoanResponse response = new LoanResponse();
         response.setId(loan.getId());
-        response.setUserId(loan.getUserId());
-        response.setBookId(loan.getBookId());
+        response.setUserId(loan.getUser().getId());
+        response.setBookId(loan.getBook().getId());
         response.setLoanDate(loan.getLoanDate());
         response.setReturnDate(loan.getReturnDate());
         response.setExpireDate(loan.getExpireDate());
@@ -23,8 +23,8 @@ public class LoanMapper {
     public LoanResponse convertToLoanResponseWithUser(Loan loan) {
         LoanResponse response = new LoanResponse();
         response.setId(loan.getId());
-        response.setUserId(loan.getUserId());
-        response.setBookId(loan.getBookId());
+        response.setUserId(loan.getUser().getId());
+        response.setBookId(loan.getBook().getId());
         response.setUser(loan.getUser()); // Assuming getUser() returns the User associated with the loan.
         response.setBook(loan.getBook()); // Assuming getBook() returns the Book associated with the loan.
         return response;

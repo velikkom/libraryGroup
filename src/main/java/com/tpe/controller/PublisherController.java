@@ -6,6 +6,7 @@ import com.tpe.payload.messages.ErrorMessages;
 import com.tpe.payload.messages.SuccessMessages;
 import com.tpe.payload.request.PublisherRequest;
 import com.tpe.payload.response.PublisherResponse;
+import com.tpe.payload.response.ResponseMessage;
 import com.tpe.service.PublisherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import javax.validation.Valid;
 public class PublisherController
 {
     private final PublisherService publisherService;
-    private final PublisherRequest publisherRequest;
+    //private final PublisherRequest publisherRequest;
 
     //http:localhost:8080/publishers/5
     @GetMapping("{id}")
@@ -35,11 +36,10 @@ public class PublisherController
     //http:localhost:8080/publishers/create
     @PostMapping("/create")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<PublisherResponse> createPublisher(@Valid @RequestBody PublisherRequest request) {
-        PublisherResponse response= publisherService.createPublisher(request);
-        return new  ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseMessage<PublisherResponse> createPublisher(@Valid @RequestBody PublisherRequest request) {
+       return publisherService.savePublisher(request);
     }
-
+    //todo page28
 
 
 }

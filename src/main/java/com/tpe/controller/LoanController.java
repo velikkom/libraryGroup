@@ -6,6 +6,7 @@ import com.tpe.payload.request.LoanRequest;
 import com.tpe.payload.response.LoanResponse;
 import com.tpe.payload.response.ResponseMessage;
 import com.tpe.service.LoanService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +23,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/loans")
 @RequiredArgsConstructor
+//@AllArgsConstructor
 public class LoanController {
 
-private final LoanService loanService;
+    private final LoanService loanService;
 
     //http:localhost:8080/loans? page = size 10& sort loanDate& type desc
     @GetMapping
