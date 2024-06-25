@@ -13,5 +13,5 @@ public interface PublisherRepository extends JpaRepository<Publisher ,Long>
 
     //boolean existsPublisherName(String publisherName);
 
-    boolean existsPublisherByNameEqualsIgnoreCase(String publisherName);
+    boolean existsPublisherByNameEqualsIgnoreCase(String publisherName );
 }

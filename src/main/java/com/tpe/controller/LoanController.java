@@ -103,7 +103,7 @@ public class LoanController {
        LoanResponse updatedLoanResponse = loanService.updateLoan(loanId,loanRequest);
        return ResponseEntity.ok(updatedLoanResponse);
     }
-    //todo loans endpoint finished page 25
+
 
 
 

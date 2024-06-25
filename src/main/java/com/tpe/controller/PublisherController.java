@@ -3,13 +3,11 @@ package com.tpe.controller;
 import com.tpe.entity.concretes.business.Publisher;
 import com.tpe.exception.ResourceNotFoundException;
 import com.tpe.payload.messages.ErrorMessages;
-import com.tpe.payload.messages.SuccessMessages;
 import com.tpe.payload.request.PublisherRequest;
 import com.tpe.payload.response.PublisherResponse;
 import com.tpe.payload.response.ResponseMessage;
 import com.tpe.service.PublisherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +37,15 @@ public class PublisherController
     public ResponseMessage<PublisherResponse> createPublisher(@Valid @RequestBody PublisherRequest request) {
        return publisherService.savePublisher(request);
     }
-    //todo page28
+
+    //http:localhost:8080/publishers/update
+    @PostMapping("/update/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<PublisherResponse> updatePublisher(@Valid @RequestBody PublisherRequest uptadePublisherRequest, @PathVariable Long id)
+    {
+        //Publisher publisher = new Publisher();
+        return ResponseEntity.ok(publisherService.update(uptadePublisherRequest,id)) ;
 
 
+    }
 }

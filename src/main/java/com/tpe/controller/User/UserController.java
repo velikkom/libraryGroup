@@ -26,7 +26,7 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
-    private final LoanService loanService;
+    //private final LoanService loanService;
 
     //register
     @PostMapping("/register/{userRole}") // http://localhost:8080/register  + JSON + POST

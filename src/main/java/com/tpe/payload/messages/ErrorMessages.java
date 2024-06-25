@@ -53,7 +53,8 @@ public class ErrorMessages {
     public static final String ALREADY_REGISTER_MESSAGE_EMAIL = " ";
     public static final String TIME_NOT_VALID_MESSAGE = "";
     public static final String NOT_FOUND_PUBLISHER_ID = "" ;
-    public static final String PUBLISHER_ALREADY_EXIST_WITH_NAME = "";
+    public static final String PUBLISHER_ALREADY_EXIST_WITH_NAME = "Publisher by Name %s already exist";
+    public static final String PUBLISHER_ALREADY_EXIST_WITH_ID = "Publisher by Id %s already exist";
     public static final String AUTHOR_ALREADY_EXIST_WITH_BOOK_NAME = "";
     //public static final String AUTHOR_NOT_FOUND_MESSAGE = "";
     public static final String NOT_FOUND_USER_MESSAGE = "User is not found by email" ;
