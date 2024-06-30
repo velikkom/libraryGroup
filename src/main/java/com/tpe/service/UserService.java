@@ -12,23 +12,31 @@ import com.tpe.payload.messages.SuccessMessages;
 import com.tpe.payload.request.UserRequest;
 import com.tpe.payload.response.ResponseMessage;
 import com.tpe.payload.response.UserResponse;
-import com.tpe.repository.LoanRepository;
 import com.tpe.repository.UserRepository;
+import com.tpe.security.jwt.JwtUtils;
+import com.tpe.security.service.UserDetailsImpl;
 import com.tpe.service.helper.MethodHelper;
 import com.tpe.service.helper.PageableHelper;
 import com.tpe.service.helper.UniquePropertyValidator;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -41,6 +49,8 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final PageableHelper pageableHelper;
+    public final AuthenticationManager authenticationManager;
+    public final JwtUtils jwtUtils;
 
     @Autowired
     private  MethodHelper methodHelper;
@@ -150,7 +160,7 @@ public class UserService {
         User user = methodHelper.isUserExist(userId);
         // !!! bulit_in kontrolu
         methodHelper.checkBuiltIn(user);
-        //!!! update isleminde gelen request de unique olmasi gereken eski datalar hic degismedi ise
+        //!!! update isleminde gelen request de unique olmasi gereken eski dataylar hic degismedi ise
         // dublicate kontrolu yapmaya gerek yok :
         uniquePropertyValidator.checkUniqueProperties(user, userRequest);
         //!!! DTO --> POJO
@@ -210,5 +220,49 @@ public class UserService {
                 .message(SuccessMessages.USER_CREATE)
                 .object(userMapper.mapUserToUserResponse(savedUser))
                 .build() ;
+    }
+
+    public ResponseEntity<UserResponse> signIn(UserRequest userRequest) {
+
+        String email = userRequest.getEmail();
+        String password = userRequest.getPassword();
+
+        //AuthenticationManager üzerinden kullanıcıyı valide edcez
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
+        //valide edilen kullanıcı contexte atılıyor
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = "Bearer " + jwtUtils.generateJwtToken(authentication);
+
+
+        //login işlemi gercekleştirilen kullanıcıya ulaşılıyor
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        //response olarak login işlemi yapan kullanıcıyı donecegiz gerekli fieldlar setleniyor
+        //Grand Authority turundeki role yapısını string turune cevriliyor
+
+        Set<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+
+        //bir kullanıcının birden fazla rolu olmayacagı için ilk indekli elemanı arıyoruz
+        Optional<String> role = roles.stream().findFirst();
+        //burada login işlemini gercekleştiren kullanıcı bilgileri responseolaraj gondereceğimiz için gerekli bilgiler setleniyor
+        //AuthResponse.AuthResponseBuilder authResponse                = AuthResponse.builder();
+        UserResponse.UserResponseBuilder userResponse = UserResponse.builder();
+
+        userResponse.email(userDetails.getEmail());
+        userResponse.token(token.substring(7));
+        userResponse.password(userDetails.getPassword());
+
+
+        //rolebilgisi  varsa response nesnesindeki değişkene setleniyor
+        role.ifPresent(userResponse::role);
+
+        return ResponseEntity.ok(userResponse.build());
+
     }
 }

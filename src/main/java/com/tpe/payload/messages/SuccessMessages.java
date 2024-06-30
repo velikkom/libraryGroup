@@ -44,7 +44,7 @@ public class SuccessMessages {
 
     // --  ASLIHAN
     public static final String BOOK_SAVE = "";
-    public static final String PUBLISHER_DELETE ="" ;
+    public static final String PUBLISHER_DELETE ="Publisher deleted successfull" ;
 //    public static final String AUTHOR_SAVE = "";
 //    public static final String AUTHOR_DELETE = "";
     public static final String USER_FOUND = "";
@@ -52,7 +52,7 @@ public class SuccessMessages {
     public static final String USER_DELETE = "";
     public static final String LOAN_FOUND =  "Lesson is saved Successfully";
     public static final String LOAN_SAVED =  "Lesson is saved Successfully";
-    public static final String LOAN_WIEVED_SUCCESSFULLY =  "Borrowed books viewed successfully";
+    public static final String LOAN_VIEWED_SUCCESSFULLY =  "Borrowed books viewed successfully";
     public static final String PUBLISHER_CREATED = "";
     public static final String BOOK_DELETE = "Book deleted successfully";
 

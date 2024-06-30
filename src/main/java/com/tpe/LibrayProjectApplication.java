@@ -72,6 +72,8 @@ public class LibrayProjectApplication implements CommandLineRunner {
 			adminRequest.setScore(0);  // Score değeri setleniyor
 			adminRequest.setBuiltIn(Boolean.TRUE);
 			adminRequest.setCreateDate(LocalDateTime.now());  // CreateDate'i şu anki zaman olarak setleme
+			//adminRequest.setRoleType(RoleType.EMPLOYEE);
+			adminRequest.setResetPasswordCode("123456789");
 
 // UserService üzerinden kullanıcıyı kaydetme
 			userService.saveUser(adminRequest, "Admin");

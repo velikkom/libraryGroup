@@ -6,6 +6,7 @@ import com.tpe.payload.response.ResponseMessage;
 import com.tpe.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +32,14 @@ public class CategoryController {
 
 
     @GetMapping("/{id}") // http://localhost:8080/categories/1 + GET
-    public CategoryResponse getById(@PathVariable Long id){
-        return categoryService.getById(id);
+    public ResponseEntity< CategoryResponse> getById(@PathVariable Long id){
+        return ResponseEntity.ok(categoryService.getById(id));
 
     }
 
+    // http://localhost:8080/categories + POST
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN')") // http://localhost:8080/categories + POST
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<CategoryResponse> save(@RequestBody @Valid
                                                   CategoryRequest categoryRequest){
         return categoryService.saveCategory(categoryRequest);

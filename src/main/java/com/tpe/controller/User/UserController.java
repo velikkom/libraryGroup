@@ -21,7 +21,7 @@ import java.security.Principal;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -29,7 +29,9 @@ public class UserController {
     //private final LoanService loanService;
 
     //register
-    @PostMapping("/register/{userRole}") // http://localhost:8080/register  + JSON + POST
+    // http://localhost:8080/register  + JSON + POST
+    @PostMapping("/register/{userRole}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<User> registerUser(@RequestBody UserRequest userRequest) {
         User registeredUser = userService.registerUser(userRequest);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
@@ -90,7 +92,7 @@ public class UserController {
 
     //update user
     @PutMapping("/update/{userId}") // http://localhost:8080/user/update/1
-    @PreAuthorize("hasAuthority('ADMIN','EMPLOYEE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
     public ResponseMessage<UserResponse> updateUser(
             @RequestBody @Valid UserRequest userRequest,
             @PathVariable Long userId) {
@@ -102,6 +104,13 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.deleteUserById(id));
+    }
+
+    //http://localhost:8080/users/signin
+    @PostMapping("/signin")
+    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+    public ResponseEntity<UserResponse> signIn(@RequestBody @Valid UserRequest userRequest) {
+        return userService.signIn(userRequest);
     }
 
 

@@ -22,7 +22,7 @@ public class AuthorController {
     // Not: createAuthor *********************************************************************
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @PostMapping("/publisher") // http://localhost:8080/authors/publisher + POST + JSON ?
+    @PostMapping("/authors") // http://localhost:8080/authors/authors + POST + JSON ?
     public ResponseMessage<AuthorResponse> saveAuthor(@RequestBody @Valid AuthorRequest authorRequest){
         return authorService.saveAuthor(authorRequest);
     }

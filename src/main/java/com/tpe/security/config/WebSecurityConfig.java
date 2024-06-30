@@ -38,12 +38,12 @@ public class WebSecurityConfig
     {
         http.cors().and()
                 .csrf().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITE_LIST).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest()
+                .authenticated();
 
         //for Click Jacking attack
         http.headers().frameOptions().sameOrigin();
@@ -89,9 +89,8 @@ public class WebSecurityConfig
     {
       return  new WebMvcConfigurer() {
 
-
-          public void addCorsMapping(CorsRegistry registry)
-          {
+          @Override
+          public void addCorsMappings(CorsRegistry registry) {
               registry.addMapping("/**")
                       .allowedOrigins("*")
                       .allowedHeaders("*")

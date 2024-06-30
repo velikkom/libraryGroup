@@ -60,5 +60,6 @@ public class UserRequest {
     private Integer score = 0;
 
     private Role role;
+    private String resetPasswordCode;
 
 }

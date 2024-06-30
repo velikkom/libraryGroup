@@ -64,4 +64,14 @@ public class PublisherService {
         return publisherMapper.mapPublisherToPublisherResponse(savedPublisher);
 
     }
+
+    public ResponseMessage deletePublisherById(Long id) {
+        isPublisherExistById(id);
+        publisherRepository.deleteById(id);
+
+        return ResponseMessage.builder()
+                .message(SuccessMessages.PUBLISHER_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
 }

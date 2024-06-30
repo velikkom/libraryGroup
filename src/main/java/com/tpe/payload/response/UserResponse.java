@@ -1,6 +1,7 @@
 package com.tpe.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tpe.entity.enums.RoleType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -21,4 +22,7 @@ public class UserResponse  {
     private LocalDate birthDate;
     private String email;
     private String password;
+    private String token;
+    private String role;
+
 }

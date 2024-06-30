@@ -1,18 +1,15 @@
 package com.tpe.controller;
 
-import com.tpe.entity.concretes.business.Publisher;
 import com.tpe.payload.messages.SuccessMessages;
 import com.tpe.payload.request.LoanRequest;
 import com.tpe.payload.response.LoanResponse;
 import com.tpe.payload.response.ResponseMessage;
 import com.tpe.service.LoanService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +40,7 @@ public class LoanController {
     public ResponseMessage<LoanResponse> getLoansById(@PathVariable("loanId") @Valid Long loanId)
     {
        LoanResponse loanResponse= loanService.findById(loanId);
-       return ResponseMessage.success(SuccessMessages.LOAN_WIEVED_SUCCESSFULLY,loanResponse);
+       return ResponseMessage.success(SuccessMessages.LOAN_VIEWED_SUCCESSFULLY,loanResponse);
     }
 
     //http:localhost:8080/loans/user/5?page=1&size=10&sort=loanDate&type=desc
