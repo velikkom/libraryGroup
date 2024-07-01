@@ -36,7 +36,7 @@ public class JwtUtils
     {
       UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal(); //It gives  successfully logg in user.
 
-        return generateToken(userDetails.getUsername());
+        return generateToken(userDetails.getEmail());
 
     }
     //creating valid jwt token
