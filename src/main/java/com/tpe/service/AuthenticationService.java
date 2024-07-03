@@ -42,8 +42,8 @@ public class AuthenticationService {
         String token = "Bearer " + jwtUtils.generateJwtToken(authentication);
         // sign in user
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-// !!! We will return the user who made the sign in transaction as a response, the necessary fields are set
-// !!! The GrantedAuthority type role structure is converted to String type
+        // !!! We will return the user who made the sign in transaction as a response, the necessary fields are set
+        // !!! The GrantedAuthority type role structure is converted to String type
         Set<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)

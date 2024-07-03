@@ -78,7 +78,7 @@ public class UserService {
             throw new UsernameNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE));
         }
 
-        return userRepository.findByEmail(email);
+        return (User) userRepository.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("Email not found"));
 
     }
 

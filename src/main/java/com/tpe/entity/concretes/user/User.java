@@ -29,15 +29,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     @Size(min = 2, max = 30)
     private String firstName;
 
-    @NotNull
+    @Column(nullable = false)
     @Size(min = 2, max = 30)
     private String lastName;
 
-    @NotNull
+    @Column(nullable = false)
     @Min(value = -2)
     @Max(value = 2)
     private Integer score = 0;

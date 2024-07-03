@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
-    User findByEmail(String email);
+    Optional<?> findByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.role.name = :name")
     Page<User> findByUserByRole(String name, Pageable pageable);
